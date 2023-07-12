@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const User = require('../models/user')
+const Data = require('../models/data')
 const bcrypt = require('bcrypt')
 const rateLimit = require('express-rate-limit');
 
@@ -83,7 +84,7 @@ router.post('/signin', loginLimiter,async(req,res)=>{
            token = jwt.sign(payload,'123456789')
            res.cookie('token', token, { maxAge: 900000, httpOnly: true, sameSite: 'lax', });
            user.token = token
-           console.log("log in mcha")
+           res.send("log in mcha")
            user.save()
         }
     }
@@ -142,10 +143,35 @@ router.put('/resetpassword/:activationcode',async(req,res)=>{
     
     )
 })
+
+router.get('/data/:nameobject',(req,res)=>{
+    const tok = req.cookies.token;
+    nameobjecct = req.params.nameobject
+    
+    User.findOne({token:tok})
+    .then((user)=>{
+        if(user){
+            console.log(user)
+        Data.findOne({name:nameobjecct})
+            .then((usr)=>
+                 {
+                res.send(usr)
+                  }
+            )
+        }
+        else{
+            res.send("feyek bik")
+        }
+    }).catch((err)=>{
+        res.send(err)
+    })
+})
+
 router.post('/logout',async(req,res)=>{
 
-    res.clearCookie("toksen")
+    res.clearCookie("token")
    res.send("logout mchat")
     
 })
+
 module.exports = router

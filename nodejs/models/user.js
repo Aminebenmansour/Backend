@@ -25,7 +25,10 @@ const User = mongoose.model('User',{
     },
     ActivationCode:{
         type:String
+    },
+    admin:{
+    type:Number,
+    default : 0
     }
- 
 })
 module.exports = User

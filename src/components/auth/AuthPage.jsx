@@ -41,6 +41,8 @@ const AuthPage = () => {
   }
   const handleSignIn =async(e) =>{
     e.preventDefault()
+    console.log(user)
+    console.log(email)
     if (!user) {
       await axios
         .post('http://localhost:3000/client/signin', { password: pass, email })
