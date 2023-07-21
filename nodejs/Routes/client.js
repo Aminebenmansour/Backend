@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 
 const jwt = require('jsonwebtoken')
 const randomstring = require('randomstring');
-const { sendConfirmationMailer,sendResetMailer } = require('./nodemailer');
+const { sendConfirmationMailer,sendResetMailer, sendContactMailer } = require('./nodemailer');
 router.post('/register',async(req,res)=>{
     data = req.body
     usr = new User(data)
@@ -167,11 +167,18 @@ router.get('/data/:nameobject',(req,res)=>{
     })
 })
 
+router.post('/contact',(req,res)=>{
+    data = req.body
+    console.log(data)
+    sendContactMailer(data.email,data.subject)
+})
+
 router.post('/logout',async(req,res)=>{
 
     res.clearCookie("token")
    res.send("logout mchat")
     
 })
+
 
 module.exports = router

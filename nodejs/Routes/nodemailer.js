@@ -49,3 +49,21 @@ module.exports.sendResetMailer = (email,token) => {
       console.log(err);
     });
 };
+module.exports.sendContactMailer = (email,subject) => {
+
+  const mailOptions = {
+    from: email ,
+    to: process.env.SOURCE_MAIL,
+    subject: 'Contact mail',
+    text: `mail:${email}, subjecct:${subject} `,
+  };
+
+  return transport
+    .sendMail(mailOptions)
+    .then((info) => {
+      console.log('Message sent: %s', info.messageId);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
