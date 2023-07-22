@@ -43,29 +43,44 @@ router.post('/data',upload.any('image') , (req,res)=>{
       res.status(400).send(err)
     }
   })
-
-router.get("/getall" , async(req,res)=>{
-    
-      const tok = req.cookies.token;
-      const result = []
-      User.findOne({token:tok})
-      .then((user)=>{
-        result = user
-      })
-      if(result){
-        if(result.admin==1){
-          users = await Data.find()
-          console.log(users)
-          res.send(users)
-        }
-        else {
-          res.send("tu n'est pas admin")
-      }
-      }
-      else {
-        res.send("tu n'est pas admin")
-    }
+  router.get("/getall", async (req, res) => {
+    const tok = req.cookies.token;
   
-   
+    User.findOne({ token: tok })
+      .then((user) => {
+        const result = user;
+        console.log(result);
+  
+        if (result) {
+          if (result.admin == 1) {
+            Data.find()
+              .then((users) => {
+                console.log(users);
+                res.send(users);
+              })
+              .catch((error) => {
+                console.error(error);
+                res.send("Une erreur s'est produite lors de la recherche des utilisateurs.");
+              });
+          } else {
+            res.send("Tu n'es pas admin.");
+          }
+        } else {
+          res.send("Tu n'es pas admin.");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.send("Une erreur s'est produite lors de la recherche de l'utilisateur.");
+      });
+  });
+  
+  router.post('/logout',async(req,res)=>{
+
+    res.clearCookie("token")
+   res.send("logout mchat")
+    
 })
+
+
 module.exports = router
